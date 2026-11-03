@@ -1,48 +1,32 @@
-import { ScrollView, Text, View, TouchableOpacity } from "react-native";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-import { ScreenContainer } from "@/components/screen-container";
+import { ActionTile, IconBadge, PageTitle, SectionHeader, StatCard, palette } from "@/components/fishery-ui";
+import { dashboardStats, transactions, boats, formatMoney } from "@/shared/demo-data";
 
-/**
- * Home Screen - NativeWind Example
- *
- * This template uses NativeWind (Tailwind CSS for React Native).
- * You can use familiar Tailwind classes directly in className props.
- *
- * Key patterns:
- * - Use `className` instead of `style` for most styling
- * - Theme colors: use tokens directly (bg-background, text-foreground, bg-primary, etc.); no dark: prefix needed
- * - Responsive: standard Tailwind breakpoints work on web
- * - Custom colors defined in tailwind.config.js
- */
 export default function HomeScreen() {
   return (
-    <ScreenContainer className="p-6">
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-        <View className="flex-1 gap-8">
-          {/* Hero Section */}
-          <View className="items-center gap-2">
-            <Text className="text-4xl font-bold text-foreground">Welcome</Text>
-            <Text className="text-base text-muted text-center">
-              Edit app/(tabs)/index.tsx to get started
-            </Text>
-          </View>
-
-          {/* Example Card */}
-          <View className="w-full max-w-sm self-center bg-surface rounded-2xl p-6 shadow-sm border border-border">
-            <Text className="text-lg font-semibold text-foreground mb-2">NativeWind Ready</Text>
-            <Text className="text-sm text-muted leading-relaxed">
-              Use Tailwind CSS classes directly in your React Native components.
-            </Text>
-          </View>
-
-          {/* Example Button */}
-          <View className="items-center">
-            <TouchableOpacity className="bg-primary px-6 py-3 rounded-full active:opacity-80">
-              <Text className="text-background font-semibold">Get Started</Text>
-            </TouchableOpacity>
-          </View>
+    <SafeAreaView style={styles.safe} edges={["top"]}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
+        <View style={styles.topBar}>
+          <View style={styles.profile}><View style={styles.profileCircle}><Text style={styles.profileInitials}>م</Text></View><View><Text style={styles.greeting}>صباح الخير، يا كابتن</Text><Text style={styles.date}>الثلاثاء، ٣ نوفمبر ٢٠٢٦</Text></View></View>
+          <View style={styles.notification}><MaterialIcons name="notifications-none" size={23} color={palette.ink} /><View style={styles.dot} /></View>
         </View>
+        <PageTitle eyebrow="نظرة عامة" title="لوحة الميناء" description="تابع حركة القوارب والحسابات من مكان واحد." />
+        <View style={styles.statusCard}><View style={styles.statusIcon}><MaterialIcons name="sailing" size={25} color={palette.white} /></View><View style={styles.statusCopy}><Text style={styles.statusTitle}>رحلة البحر الواسع جارية</Text><Text style={styles.statusSub}>آخر تحديث منذ ١٢ دقيقة · ٦ صيادين على متن القارب</Text></View><View style={styles.live}><View style={styles.liveDot} /><Text style={styles.liveText}>مباشر</Text></View></View>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.statsRow}>{dashboardStats.map((stat) => <StatCard key={stat.label} {...stat} icon={stat.icon as any} />)}</ScrollView>
+        <SectionHeader title="إجراءات سريعة" action="عرض الكل" />
+        <View style={styles.actions}><ActionTile icon="directions-boat" title="إضافة قارب" subtitle="سجل بيانات قارب جديد" color={palette.teal} /><ActionTile icon="inventory-2" title="تجهيز رحلة" subtitle="سراكيل ومواد الإبحار" color="#C77725" /><ActionTile icon="person-add" title="إضافة صياد" subtitle="أضف فرداً إلى الدليل" color="#315C9B" /></View>
+        <SectionHeader title="القوارب النشطة" action="كل القوارب" />
+        <View style={styles.boatStrip}>{boats.slice(0, 2).map((boat) => <View style={styles.boatMini} key={boat.id}><View style={[styles.boatIcon, { backgroundColor: `${boat.color}18` }]}><MaterialIcons name="directions-boat" size={22} color={boat.color} /></View><View style={styles.boatInfo}><Text style={styles.boatName}>{boat.name}</Text><Text style={styles.boatMeta}>{boat.code} · {boat.crew} صيادين</Text></View><View style={styles.boatStatus}><View style={[styles.statusDot, { backgroundColor: boat.status === "في البحر" ? palette.teal : palette.green }]} /><Text style={styles.boatStatusText}>{boat.status}</Text></View></View>)}</View>
+        <SectionHeader title="آخر الحركات" action="كشف الحساب" />
+        <View style={styles.transactionCard}>{transactions.slice(0, 3).map((tx) => <View style={styles.transactionRow} key={tx.id}><IconBadge icon={tx.icon as any} color={tx.type === "income" ? palette.green : palette.amber} background={tx.type === "income" ? "#E3F5EC" : "#FFF0D7"} size={38} /><View style={styles.transactionCopy}><Text style={styles.transactionTitle}>{tx.title}</Text><Text style={styles.transactionSub}>{tx.subtitle}</Text></View><Text style={[styles.transactionAmount, { color: tx.type === "income" ? palette.green : palette.red }]}>{tx.type === "income" ? "+" : "−"}{formatMoney(tx.amount)}</Text></View>)}</View>
+        <Text style={styles.footerNote}>نسخة تجريبية · البيانات المعروضة للتوضيح</Text>
       </ScrollView>
-    </ScreenContainer>
+    </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({ safe: { flex: 1, backgroundColor: palette.paper }, content: { paddingHorizontal: 18, paddingBottom: 28 }, topBar: { flexDirection: "row-reverse", alignItems: "center", justifyContent: "space-between", paddingTop: 8, marginBottom: 22 }, profile: { flexDirection: "row-reverse", alignItems: "center", gap: 10 }, profileCircle: { width: 39, height: 39, borderRadius: 15, backgroundColor: palette.navy, alignItems: "center", justifyContent: "center" }, profileInitials: { color: palette.white, fontWeight: "800", fontSize: 18 }, greeting: { color: palette.ink, fontWeight: "800", fontSize: 14, textAlign: "right" }, date: { color: palette.muted, fontSize: 11, marginTop: 3, textAlign: "right" }, notification: { width: 40, height: 40, borderRadius: 14, backgroundColor: palette.white, borderWidth: 1, borderColor: palette.line, alignItems: "center", justifyContent: "center" }, dot: { width: 7, height: 7, borderRadius: 4, backgroundColor: palette.red, position: "absolute", top: 9, right: 10, borderWidth: 1, borderColor: palette.white }, statusCard: { backgroundColor: palette.navy, borderRadius: 20, padding: 16, flexDirection: "row-reverse", alignItems: "center", gap: 11, marginBottom: 14 }, statusIcon: { width: 45, height: 45, borderRadius: 16, backgroundColor: "#31516A", alignItems: "center", justifyContent: "center" }, statusCopy: { flex: 1 }, statusTitle: { color: palette.white, fontSize: 14, fontWeight: "800", textAlign: "right" }, statusSub: { color: "#B9CBD7", fontSize: 11, lineHeight: 17, textAlign: "right", marginTop: 4 }, live: { flexDirection: "row-reverse", alignItems: "center", gap: 4, alignSelf: "flex-start", backgroundColor: "#214A59", borderRadius: 20, paddingHorizontal: 7, paddingVertical: 5 }, liveDot: { width: 6, height: 6, borderRadius: 3, backgroundColor: "#73E2B0" }, liveText: { color: "#A7F0CC", fontSize: 10, fontWeight: "700" }, statsRow: { gap: 10, paddingVertical: 2 }, actions: { gap: 0 }, boatStrip: { gap: 9 }, boatMini: { backgroundColor: palette.white, borderRadius: 17, borderWidth: 1, borderColor: palette.line, padding: 12, flexDirection: "row-reverse", alignItems: "center", gap: 10 }, boatIcon: { width: 39, height: 39, borderRadius: 13, alignItems: "center", justifyContent: "center" }, boatInfo: { flex: 1 }, boatName: { color: palette.ink, fontSize: 13, fontWeight: "800", textAlign: "right" }, boatMeta: { color: palette.muted, fontSize: 11, marginTop: 3, textAlign: "right" }, boatStatus: { alignItems: "flex-end", gap: 5 }, statusDot: { width: 7, height: 7, borderRadius: 4 }, boatStatusText: { color: palette.muted, fontSize: 10, fontWeight: "700" }, transactionCard: { backgroundColor: palette.white, borderRadius: 19, borderWidth: 1, borderColor: palette.line, paddingHorizontal: 13 }, transactionRow: { flexDirection: "row-reverse", alignItems: "center", gap: 10, paddingVertical: 13, borderBottomWidth: 1, borderBottomColor: "#F0F3F4" }, transactionRowLast: { borderBottomWidth: 0 }, transactionCopy: { flex: 1 }, transactionTitle: { color: palette.ink, fontSize: 12, fontWeight: "800", textAlign: "right" }, transactionSub: { color: palette.muted, fontSize: 10, marginTop: 3, textAlign: "right" }, transactionAmount: { fontSize: 11, fontWeight: "800", textAlign: "left" }, footerNote: { color: "#9AA8AF", textAlign: "center", fontSize: 11, marginTop: 24 },
+});
