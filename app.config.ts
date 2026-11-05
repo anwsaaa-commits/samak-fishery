@@ -57,6 +57,9 @@ const publicRuntime = {
     process.env.EXPO_PUBLIC_APP_ID ??
     "",
   apiBaseUrl: process.env.EXPO_PUBLIC_API_BASE_URL ?? "",
+  eas: {
+    projectId: "manus-boat-app",
+  },
 };
 
 const config: ExpoConfig = {
