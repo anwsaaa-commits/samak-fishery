@@ -33,14 +33,12 @@ const publicRuntime = {
   oauthServerUrl: process.env.MANUS_OAUTH_API_URL ?? process.env.OAUTH_SERVER_URL ?? process.env.EXPO_PUBLIC_OAUTH_SERVER_URL ?? "",
   appId: process.env.MANUS_PROJECT_ID ?? process.env.VITE_APP_ID ?? process.env.EXPO_PUBLIC_APP_ID ?? "",
   apiBaseUrl: process.env.EXPO_PUBLIC_API_BASE_URL ?? "",
-  eas: {
-    projectId: "f54adce6-8eac-4086-bd1a-cs9baf15a71a",
-  },
 };
 
 const config: ExpoConfig = {
   name: env.appName,
   slug: env.appSlug,
+  owner: "anwsaaa",
   version: "0.2.0",
   extra: publicRuntime,
   orientation: "portrait",
