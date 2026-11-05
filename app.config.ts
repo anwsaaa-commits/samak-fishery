@@ -58,7 +58,7 @@ const publicRuntime = {
     "",
   apiBaseUrl: process.env.EXPO_PUBLIC_API_BASE_URL ?? "",
   eas: {
-    projectId: "manus-boat-app",
+    projectId: "f54adce6-8eac-4086-bd1a-cs9baf15a71a",
   },
 };
 
